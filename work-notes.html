@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NAC and UIV Framework at Nokia: A Comprehensive Exploration</title>
+</head>
+<body>
+    <h1>NAC and UIV Framework at Nokia: A Comprehensive Exploration</h1>
+
+    <h2>Introduction</h2>
+    <p>Nokia's Network Access Control (NAC) and Universal Inventory Viewer (UIV) are critical products installed on the Nokia Cloud Stack (NCS) and Open Cloud Platform (OCP) environments. While NAC utilizes data created within UIV, my work has been primarily focused on the UIV product. This essay delves into the intricate components, development frameworks, deployment processes, and support activities associated with UIV, ensuring no aspect from the initial input is overlooked.</p>
+
+    <h2>Understanding UIV Components</h2>
+    <p>The UIV framework is a complex system comprising several key components and tools:</p>
+    <ul>
+        <li><strong>CSFP (Cloud Service Framework Platform):</strong> A platform facilitating cloud services within the UIV environment.</li>
+        <li><strong>Harbor:</strong> A secure container image registry that stores, signs, and scans container images for vulnerabilities.</li>
+        <li><strong>Neo4j Browser:</strong> A visualization tool for interacting with the Neo4j graph database, allowing for query execution and data visualization.</li>
+        <li><strong>iHUB GUI:</strong> An interactive graphical user interface for managing UIV data and triggering adapters.</li>
+        <li><strong>MinIO:</strong> An object storage server compatible with Amazon S3, used for storing large amounts of unstructured data.</li>
+    </ul>
+    <p>These tools work in tandem within the UIV framework, supported by multiple instances of various pods such as RDA (Real-Time Data Analytics), Neo4j, MariaDB, MinIO, and Kafka. Each pod plays a vital role:</p>
+    <ul>
+        <li><strong>RDA Pods:</strong> Handle data streaming and processing.</li>
+        <li><strong>Neo4j Pods:</strong> Manage the graph database instances for data storage and retrieval.</li>
+        <li><strong>MariaDB Pods:</strong> Provide relational database services for structured data.</li>
+        <li><strong>MinIO Pod:</strong> Offers scalable storage solutions for unstructured data.</li>
+        <li><strong>Kafka Pods:</strong> Enable high-throughput data streaming and message queuing between components.</li>
+    </ul>
+
+    <h2>UIV Framework Development</h2>
+    <p>The development within the UIV framework is categorized into different adapter types, each serving unique purposes in data collection, transformation, and association.</p>
+
+    <h3>Adapter Type: Discovery</h3>
+    <p>The Discovery adapters are designed to collect data files in formats such as <code>.json</code>, <code>.xml</code>, and <code>.csv</code> using protocols like SFTP and, occasionally, HTTP. These adapters use filter and transform files—primarily in XML format—to process and convert the collected data into the expected format, ultimately saving them as <code>.xml</code> files within the system.</p>
+    <p>When creating new entities, the filter file is updated to establish the necessary associations between them. However, there are cases where the filter file alone is insufficient. In such instances, custom Java code is written to manipulate the data as required, utilizing XML and JSON paths along with standard Java packages. This custom logic ensures that all data is accurately processed and meets the specified requirements.</p>
+    <p>Throughout my tenure, I have developed and taken handover for more than <strong>15 adapters</strong> of this type, managing data streams ranging from 300,000 to 2.5 million records. These adapters are crucial for the initial data ingestion and transformation processes within the UIV framework.</p>
+
+    <h3>Adapter Type: Custom (Go, JavaScript, Java, XML, Config)</h3>
+    <p>This adapter type is more complex, integrating multiple programming languages such as Go, JavaScript, and Java, along with XML and configuration files. The primary function of this adapter is to fetch data dynamically from external Oracle databases in CSV format and import it into local MariaDB instances.</p>
+    <p>The adapter uses a configuration file (<code>.conf</code>) to maintain inclusion and exclusion rules for specific tables or columns. These rules dynamically generate queries to fetch only the necessary data from the external server. The fetched data is then transformed using a JavaScript (<code>.js</code>) file, which processes the CSV input to meet UIV data requirements.</p>
+    <p>SQL queries are employed to retrieve all required and related data from multiple tables, which are then used within the JavaScript transformation logic. After transformation, the data is streamed using Kafka producers and consumed by the product's Kafka consumers to be loaded into Neo4j.</p>
+    <p>Moreover, this adapter implements logic to generate the delta between today's and yesterday's data. It intelligently streams insert, update, and delete operations based on the changes detected, ensuring that only the modified data is processed and stored. This mechanism efficiently handles massive datasets—up to <strong>50 million records</strong>—and is a unique requirement within the project.</p>
+    <p>To facilitate these operations, a Docker image was created, encompassing all necessary packages, languages, and dependencies. This image ensures a consistent environment for the adapter to run smoothly within Kubernetes.</p>
+
+    <h3>Adapter Type: Stitching</h3>
+    <p>The Stitching adapters address limitations within the product framework regarding entity associations. While the framework allows for XML files to fetch different entities and create associations, it doesn't support all use cases. Therefore, custom adapters are developed to fetch data from Neo4j, process it, and, if necessary, retrieve additional related entities. This process creates the required associations between entities and adds necessary properties.</p>
+    <p>I have developed and taken handover for over <strong>10 adapters</strong> of this type. These adapters enhance the data model within Neo4j, ensuring that all relationships and properties accurately reflect the real-world scenarios they represent.</p>
+
+    <h2>Deployment Process</h2>
+    <p>The deployment of these adapters involves several steps and tools:</p>
+    <ul>
+        <li><strong>Version Control with GitHub:</strong> All developed code is checked into GitHub repositories, ensuring version control and collaboration capabilities.</li>
+        <li><strong>Continuous Integration with Jenkins:</strong> Jenkins pipelines are utilized to build the code, creating the necessary JAR files for deployment.</li>
+        <li><strong>Deployment to UIV Environment:</strong> The generated JAR files are deployed into the UIV environment using <code>curl</code> commands, allowing for automation and scripting capabilities.</li>
+        <li><strong>Helix Docker Image:</strong> A custom Docker image, known as Helix, is created as a profile and installed in Kubernetes. This image contains all the necessary configurations and dependencies required by the adapters.</li>
+    </ul>
+    <p>Once deployed, the adapters are executed, and their execution details are stored in MariaDB. The created data is then loaded into Neo4j, facilitated by the RDA pods:</p>
+    <ul>
+        <li><strong>First RDA Pod:</strong> Monitors the entities and loads data into Neo4j.</li>
+        <li><strong>Second RDA Pod:</strong> Validates newly streamed data against existing data and retains only the streamed data.</li>
+    </ul>
+    <p>The IHUB GUI plays a significant role in this process. It is a tool designed to visually view UIV data and trigger adapters. Although I have not worked extensively on customizing IHUB to meet customer-specific visual requirements, I possess theoretical knowledge of its capabilities.</p>
+
+    <h2>Environment Support and Maintenance</h2>
+    <p>Maintaining the UIV environment is critical to ensure seamless operations:</p>
+    <ul>
+        <li><strong>Pod Management:</strong> Frequently, the environment experiences downtime, necessitating the restart of specific pods in a particular sequence to restore functionality.</li>
+        <li><strong>Scaling Pod Replicas:</strong> The default replica counts for pods may not provide the required performance. Monitoring resource utilization and scaling replicas is essential to meet performance demands.</li>
+        <li><strong>Kafka Stream Lag Management:</strong> Kafka pods may experience data streaming lags. Clearing these lags is crucial to maintain data integrity and ensure timely data processing.</li>
+    </ul>
+
+    <h2>Documentation Preparation</h2>
+    <p>Comprehensive documentation is a vital aspect of the project:</p>
+    <ul>
+        <li><strong>Deployment and Release Documents:</strong> Prepared detailed documentation outlining the deployment processes, configurations, and release notes for each adapter.</li>
+        <li><strong>Implementation Documents:</strong> Created in-depth implementation guides for each adapter, explaining the logic, configurations, and usage instructions.</li>
+    </ul>
+    <p>These documents serve as references for future development, deployment, and troubleshooting activities, ensuring knowledge transfer and consistency across the team.</p>
+
+    <h2>Testing Support</h2>
+    <p>While all unit testing is completed before delivery, additional support is often required:</p>
+    <ul>
+        <li><strong>Testing Team Collaboration:</strong> The testing team may not always work efficiently due to various constraints. Providing necessary support helps streamline the testing process.</li>
+        <li><strong>Hardening Phases:</strong> During hardening phases, supporting the testing team ensures that end-to-end testing of the software is completed successfully.</li>
+    </ul>
+    <p>This collaborative approach enhances the quality of the final product and ensures that all functionalities work as intended.</p>
+
+    <h2>Technical Skills and Tools Utilized</h2>
+    <p>The project involves a diverse set of programming languages, databases, and tools:</p>
+    <ul>
+        <li><strong>Programming Languages:</strong>
+            <ul>
+                <li><strong>Java:</strong> Used for developing custom logic and processing data within adapters.</li>
+                <li><strong>Python:</strong> Utilized for scripting and automating tasks within the environment.</li>
+                <li><strong>JavaScript:</strong> Employed in transformation logic for processing CSV data into UIV-compatible formats.</li>
+            </ul>
+        </li>
+        <li><strong>Databases:</strong>
+            <ul>
+                <li><strong>SQL (MariaDB):</strong> Used for structured data storage, queries, and managing relational data.</li>
+                <li><strong>Neo4j:</strong> A graph database used for storing and managing complex relationships between entities.</li>
+            </ul>
+        </li>
+        <li><strong>Other Tools:</strong>
+            <ul>
+                <li><strong>GitHub:</strong> Version control system for managing code repositories.</li>
+                <li><strong>Jenkins:</strong> Continuous Integration and Continuous Deployment (CI/CD) tool for automating builds and deployments.</li>
+                <li><strong>Docker:</strong> Used for creating containerized applications, ensuring consistency across different environments.</li>
+                <li><strong>Kubernetes:</strong> An orchestration platform for deploying and managing containerized applications at scale.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>Additional Projects and Contributions</h2>
+    <p>Beyond the UIV framework, I have been involved in other projects such as:</p>
+    <ul>
+        <li><strong>NBN Project:</strong> Worked on integration and deployment aspects, ensuring seamless connectivity and data flow.</li>
+        <li><strong>NetAct:</strong> Contributed to the network management system, focusing on monitoring and optimization features.</li>
+        <li><strong>Integration Projects:</strong> Facilitated the integration of various systems and tools within the Nokia ecosystem, enhancing interoperability.</li>
+        <li><strong>E911:</strong> Supported projects related to emergency services, ensuring compliance with regulatory requirements and robust system performance.</li>
+    </ul>
+
+    <h2>Conclusion</h2>
+    <p>My experience with Nokia's NAC and UIV products has been extensive and multifaceted. Working primarily on the UIV framework, I have engaged in developing various adapter types, managing large-scale data processing, and ensuring the efficient deployment and maintenance of the environment. Through collaboration, technical expertise, and a commitment to excellence, I have contributed significantly to the project's success, ensuring that all data is accurately processed and readily available for the NAC product and other integrations.</p>
+    <p>The skills and knowledge gained throughout this journey encompass a wide range of technologies and best practices, positioning me to tackle complex challenges in data management and software development within any advanced technological environment.</p>
+</body>
+</html>
