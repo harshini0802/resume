@@ -94,8 +94,19 @@
         <section class="education section">
             <div class="section-title">Education</div>
             <div class="education">
-                <h3>Relevant Education Not Specified</h3>
-                <p>Placeholder for degree and institution details.</p>
+                <h3>MTech Integrated Software Engineering</h3>
+                <p>Vellore Institute of Technology, Vellore, Tamil Nadu</p>
+                <p>2015 - 2020 | CGPA: 8.23</p>
+            </div>
+            <div class="education">
+                <h3>HSC</h3>
+                <p>Sunbeam Matriculation Higher Secondary School, Vellore, Tamil Nadu</p>
+                <p>2014 - 2015 | Percentage: 92.08%</p>
+            </div>
+            <div class="education">
+                <h3>SSLC</h3>
+                <p>Sunbeam Matriculation Higher Secondary School, Vellore, Tamil Nadu</p>
+                <p>2012 - 2013 | Percentage: 96.2%</p>
             </div>
         </section>
 
@@ -103,18 +114,51 @@
             <div class="section-title">Role Suitability Breakdown</div>
             <canvas id="roleSuitabilityChart" width="400" height="400"></canvas>
         </section>
+
+        <!-- New College Information Section -->
+        <section class="college section">
+            <div class="section-title">College Projects & Internships</div>
+            <ul>
+                <li><strong>Personality Check:</strong> A Windows application developed in Visual Basic Studio using Windows Form.</li>
+                <li><strong>Environment Monitoring System:</strong> Developed using Node.js to show environmental conditions using IoT.</li>
+                <li><strong>Asset Manager:</strong> Android app to manage asset data, including asset status and service requests.</li>
+                <li><strong>Earthquake Spots:</strong> Mapped earthquake locations using Map Plotting in R language.</li>
+                <li><strong>Pallanguzhi:</strong> Gaming application developed using Java Applet.</li>
+                <li><strong>CarGO_Bay:</strong> Cargo service app with PHP backend and HTML frontend for transportation service access.</li>
+            </ul>
+
+            <div class="section-title">Internships</div>
+            <ul>
+                <li><strong>Navitas Life Science LLP:</strong> Developed an Android application using MIT App Inventor (May 7, 2019 - June 14, 2019).</li>
+                <li><strong>Nokia Solutions and Networks:</strong> Worked on projects like Automating Storage Migration and E911 (Oct 14, 2019 - June 30, 2020).</li>
+            </ul>
+
+            <div class="section-title">Certifications & Courses</div>
+            <ul>
+                <li>Certified as “Senior Grade in Typewriting” (English) - August 2015.</li>
+                <li>Certified in "Advanced Training in Computer Technology" by Apollo Computer Educational Limited, June 2015.</li>
+            </ul>
+
+            <div class="section-title">Hobbies</div>
+            <ul>
+                <li>Programming</li>
+                <li>Practicing Yoga</li>
+            </ul>
+
+            <div class="section-title">Languages Known</div>
+            <p>Tamil, English, Hindi</p>
+        </section>
     </div> <!-- Add download button -->
     <div style="text-align: center; margin: 20px;">
         <button onclick="downloadResume()" style="padding: 10px 20px; font-size: 16px;">Download Resume</button>
     </div>
-
-    <!-- JavaScript to handle PDF generation -->
+  <!-- JavaScript to handle PDF generation -->
     <script>
         function downloadResume() {
             const element = document.getElementById('resume-content');
             html2pdf()
                 .from(element)
-                .set({
+                .set({                    
                     margin: [0.5, 0.1, 1, 0.1],
                     filename: 'Harshini_Leninkumar_Resume.pdf',
                     html2canvas: { scale: 3, logging: true, letterRendering: true },
