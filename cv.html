@@ -1,1 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harshini Leninkumar - Resume</title>
+    <link rel="stylesheet" href="style/index.css"> <!-- External CSS -->
+    <!-- Include html2pdf.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container" id="resume-content">
+        <h1>Harshini Leninkumar</h1>
+        <div class="contact-info">
+            <p>Chennai, Tamil Nadu, India</p>
+            <p>Email: harshinileninkumar@example.com</p>
+            <p>Phone: 1234567890</p>
+            <p><a href="https://www.linkedin.com/in/harshini-leninkumar-838057164/">LinkedIn: Harshini Leninkumar</a></p>
+        </div>
 
+        <section class="summary section">
+            <div class="section-title">Summary</div>
+            <p>Solution Engineer and R&D Specialist with over 5 years of experience in the telecommunications industry. Skilled in adapter development, data processing, and deployment automation, with expertise in Java, Python, Docker, Kubernetes, and data streaming with Kafka. Known for optimizing system performance, collaborating with cross-functional teams, and maintaining system stability within Nokia’s Network Access Control and Universal Inventory Viewer products.</p>
+        </section>
+
+        <section class="skills section">
+            <div class="section-title">Skills</div>
+            <ul>
+                <li><strong>Backend Development:</strong> Java, Python, C#, SQL, Neo4j, MariaDB, .Net Core, REST APIs</li>
+                <li><strong>Data Streaming & Processing:</strong> Kafka, JSON, XML, CSV</li>
+                <li><strong>Containerization & CI/CD:</strong> Docker, Kubernetes, Jenkins, GitHub</li>
+                <li><strong>Cloud Services:</strong> Azure, AWS</li>
+                <li><strong>Other Tools:</strong> Git, Jenkins, iHub GUI</li>
+            </ul>
+        </section>
+
+        <section class="certifications section">
+            <div class="section-title">Certifications</div>
+            <ul>
+                <li><strong>Relevant Certifications Not Specified</strong> - Placeholder for certifications.</li>
+            </ul>
+        </section>
+
+        <section class="experience section">
+            <div class="section-title">Work Experience</div>
+
+            <div class="experience">
+                <h3>Nokia</h3>
+                <p>Solution Engineer</p>
+                <p>Chennai, Tamil Nadu, India</p>
+                <p>April 2024 – Present</p>
+                <ul>
+                    <li>Develops and customizes solutions for client requirements, ensuring seamless integration of Nokia’s UIV and NAC products.</li>
+                    <li>Collaborates closely with cross-functional teams to improve the adaptability and performance of products for client needs.</li>
+                    <li>Provides technical support for product deployment and maintenance, ensuring smooth operation in the client environment.</li>
+                </ul>
+            </div>
+
+            <div class="experience">
+                <h3>Applied R&D Engineer</h3>
+                <p>Nokia</p>
+                <p>October 2021 – April 2024</p>
+                <ul>
+                    <li>Developed and maintained over 15 Discovery adapters for UIV, managing data ingestion from sources like JSON, XML, and CSV files via SFTP and HTTP.</li>
+                    <li>Created custom adapters in Java, Go, and JavaScript to fetch data from external Oracle databases, transforming it into CSV format and loading it into MariaDB.</li>
+                    <li>Implemented Kafka producers and consumers for data streaming, transferring data to Neo4j for visualization and analysis.</li>
+                    <li>Managed high-volume data handling with delta management mechanisms for daily updates, processing over 50 million records.</li>
+                    <li>Performed environment maintenance, managing pod replicas, resolving Kafka lags, and maintaining overall stability and performance.</li>
+                </ul>
+            </div>
+
+            <div class="experience">
+                <h3>Graduate Engineering Trainee</h3>
+                <p>Nokia</p>
+                <p>August 2020 – October 2021</p>
+                <ul>
+                    <li>Gained foundational experience in Nokia’s UIV and NAC products, assisting with adapter development and system integration tasks.</li>
+                    <li>Supported testing and documentation efforts, helping the testing team complete end-to-end validation before release.</li>
+                </ul>
+            </div>
+
+            <div class="experience">
+                <h3>Student Trainee (Internship)</h3>
+                <p>Nokia</p>
+                <p>October 2019 – July 2020</p>
+                <ul>
+                    <li>Supported the engineering team with data transformation tasks and learned to use tools like Jenkins, GitHub, and Docker for version control and automation.</li>
+                    <li>Developed initial skills in programming with Java and Python, contributing to small-scale development tasks.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="education section">
+            <div class="section-title">Education</div>
+            <div class="education">
+                <h3>Relevant Education Not Specified</h3>
+                <p>Placeholder for degree and institution details.</p>
+            </div>
+        </section>
+
+    </div> <!-- Add download button -->
+    <div style="text-align: center; margin: 20px;">
+        <button onclick="downloadResume()" style="padding: 10px 20px; font-size: 16px;">Download Resume</button>
+    </div>
+
+    <!-- JavaScript to handle PDF generation -->
+    <script>
+        function downloadResume() {
+            const element = document.getElementById('resume-content');
+            html2pdf()
+                .from(element)
+                .set({
+                    margin: [0.5, 0.1, 1, 0.1],
+                    filename: 'Harshini_Leninkumar_Resume.pdf',
+                    html2canvas: { scale: 3, logging: true, letterRendering: true },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                })
+                .save();
+        }
+    </script>
+</body>
+</html>
