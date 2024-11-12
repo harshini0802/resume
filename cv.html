@@ -7,14 +7,15 @@
     <link rel="stylesheet" href="style/index.css"> <!-- External CSS -->
     <!-- Include html2pdf.js from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <!-- Include Chart.js library for the pie chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container" id="resume-content">
         <h1>Harshini Leninkumar</h1>
         <div class="contact-info">
             <p>Chennai, Tamil Nadu, India</p>
-            <p>Email: harshinileninkumar@example.com</p>
-            <p>Phone: 1234567890</p>
+            <p>Email: harshini0802@gmail.com</p>
             <p><a href="https://www.linkedin.com/in/harshini-leninkumar-838057164/">LinkedIn: Harshini Leninkumar</a></p>
         </div>
 
@@ -98,6 +99,10 @@
             </div>
         </section>
 
+        <section class="chart section">
+            <div class="section-title">Role Suitability Breakdown</div>
+            <canvas id="roleSuitabilityChart" width="400" height="400"></canvas>
+        </section>
     </div> <!-- Add download button -->
     <div style="text-align: center; margin: 20px;">
         <button onclick="downloadResume()" style="padding: 10px 20px; font-size: 16px;">Download Resume</button>
@@ -117,6 +122,49 @@
                 })
                 .save();
         }
+    </script>
+
+    <!-- JavaScript to create and display the pie chart -->
+    <script>
+        const ctx = document.getElementById('roleSuitabilityChart').getContext('2d');
+        const roleSuitabilityChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['DevOps (35%)', 'Developer (25%)', 'Data Scientist/Data Engineer (30%)', 'Solution Engineer (10%)'],
+                datasets: [{
+                    data: [35, 25, 30, 10],
+                    backgroundColor: ['#FFA500', '#FF4500', '#FF6347', '#FF69B4'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const role = context.label.split(' ')[0];
+                                let techDetails = '';
+                                switch (role) {
+                                    case 'DevOps':
+                                        techDetails = 'Docker, Kubernetes, Jenkins, GitHub, CI/CD, Environment Maintenance';
+                                        break;
+                                    case 'Developer':
+                                        techDetails = 'Java, Python, JavaScript, REST APIs, Adapter Development';
+                                        break;
+                                    case 'Data':
+                                        techDetails = 'Data Processing, Kafka, Neo4j, SQL, Data Ingestion, Transformation';
+                                        break;
+                                    case 'Solution':
+                                        techDetails = 'Custom Requirements, Product Integration';
+                                        break;
+                                }
+                                return `${context.label}: ${techDetails}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>
