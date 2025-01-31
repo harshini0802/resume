@@ -1,0 +1,27 @@
+Skills to Highlight in Resume
+Technical Skills
+Programming Languages: Java, Python, C#, JavaScript, Shell Script, XSLT
+Data Integration & Transformation: SQL, CQL, JSON, XML, XPath, XSLT
+Cloud & Container Technologies: Docker, Kubernetes
+Automation Tools: Ansible, Jenkins, Robot Framework
+Database Management: MariaDB, Neo4j
+Business Intelligence: Power BI, Python Pandas
+Web Development: Node.js, HTML, CSS
+Application Development: Android App Development (MIT App Inventor), Windows Application Development (C#)
+Project Management & Tools
+Jira-Utility for data collection and analysis
+CI/CD pipelines for automation and deployment
+Site Acceptance Testing and Integration using NetAct
+Key Areas of Expertise
+Unified Inventory (UIV): Adapter development and migration for Nokia's UIV platform, data transformation for multi-vendor environments.
+Data Analysis & Visualization: Interactive Power BI dashboards and Python-based data manipulation.
+Automation & DevOps: Automated network element integration, VMware ESXi migration, and web portal testing.
+Software Testing: Manual and automated testing for web portals and storage migration.
+Soft Skills
+Strong problem-solving and analytical skills
+Collaboration and teamwork in cross-functional environments
+Efficient project planning and execution
+Enhanced user experience through feature development and optimization
+Certifications & Frameworks
+Hands-on experience with Selenium libraries for web automation
+Familiarity with Myers-Briggs Type Indicator (MBTI) framework through C# application development
