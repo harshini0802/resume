@@ -1,0 +1,497 @@
+NAC and UIV Nokia product is installed on NCS/OCP environment.
+In this, I work on the UIV product only.
+NAC uses data created in UIV.
+
+UIV component has CSFP, Harbor, Neo4j Browser, Ihub GUI, Minio... I use all these tools.
+
+It has multiple instances of RDA pods, Neo4j pods, MariaDB pods, Minio pod, Kafka pods to support the UIV component.
+
+###################################################################
+
+UIV framework: development-wise
+Adapter type Discovery
+The UIV framework helps us to collect the data files like .json, .xml, .csv files using SFTP and HTTP (only once I worked).
+When we update the XML file called filter file or transform file, the product framework will use those files to transform them into the expected format and save it as an XML file.
+
+While creating entities, we update the filter file so that necessary associations between the entities are created.
+In some cases, the filter file alone will not be sufficient to create the necessary data, so in Java code, I will write customized code to update data as expected using XML and JSON paths (will use Java packages).
+
+In these adapters, data streamed will be mostly between 3L to 25L.
+
+Developed and took handover for more than 15+ adapters.
+
+Customer: AT&T, Optus
+
+###################################################################
+
+There is another type of adapter which uses Go language, JavaScript, Java, XML, and config.
+In this adapter, we have customized the adapter that does the following activities:
+Dynamic logic developed to fetch data from external Oracle DB as CSV format and import those CSV files to local MariaDB.
+Inclusion/exclusion of tables or columns are maintained in the .conf that will generate the query to fetch data from the external server and import it into the internal server.
+
+In this, developed a transformation code that will use CSV file input as input, JavaScript file to transform into required UIV Data. SQL queries are used to fetch all the required and related data from multiple tables that were used in the JavaScript file.
+
+The generated data will be streamed using Kafka producer. They are consumed by the product's Kafka consumer and loaded into Neo4j.
+
+Logics are implemented to generate the delta between today's data and yesterday's data.
+
+If new entities are included, insert data will be streamed.
+If existing data got updated, update data will be streamed.
+If data got deleted in delta, delete data will be streamed.
+
+These codes are created to generate UIV data of about 5 crore data.
+
+In order to do all these activities, created a Docker image that includes all necessary packages, languages, and its dependencies to perform the above steps.
+
+It is a single unique requirement.
+
+Customer: Optus
+
+###################################################################
+
+Adapter type Stitching
+
+In the product framework, we will write an XML file that will fetch different sets of entities and create associations between them as required.
+
+But this will not support in all cases.
+
+So we have written the adapter that will fetch data from Neo4j, process it, and if required, it will fetch multiple other related entities and create necessary associations between them and include necessary properties to it.
+
+Developed and took handover for more than 10+ adapters.
+
+Customer: Optus
+
+###################################################################
+
+Deployment
+
+The developed adapter I used to check into Git.
+Using Jenkins pipeline, I will create necessary jar files.
+Those jar files I will deploy in the UIV environment using curl commands.
+
+The Helix Docker image which is created as a profile will be installed in Kubernetes.
+
+Once these adapters are deployed, when I execute the adapter, execution details will be stored in MariaDB and created data will be loaded into Neo4j.
+
+Using the framework, data will be streamed. Multiple RDA pods handle these streaming.
+1 RDA pod monitors the entities and loads into Neo4j.
+2 RDA pods validate newly streamed and existing data and keep the streamed data alone.
+
+IHUB is a tool to visually view the UIV data and trigger the adapter.
+This IHUB can be customized to make it visual as customers want. I have theoretical knowledge on this and didn't work.
+
+###################################################################
+
+Environment support
+Many times these environments go down, I will restart the required pod in sequence to fix it.
+Existing pod replica counts sometimes do not provide required performance, so I will monitor them and increase them as required.
+
+Clearing the streamed data lags in Kafka pods when they occur.
+
+#########################################################
+
+Document Preparation
+
+Prepared required deployment/release document.
+Implementation document for each adapter.
+
+#########################################################
+
+Testing support
+
+All the unit testing will be done and delivered.
+
+But still, the testing team doesn't work efficiently, so necessary support will be provided from my side for execution and testing.
+
+#########################################################
+Languages I worked with:
+Java
+Python
+JavaScript
+
+DDL
+Neo4j
+MariaDB
+
+Other tools (basic):
+GitHub
+Jenkins
+Docker
+
+###################################################################
+
+Development Support
+
+For the development, I have supported my colleagues in the development of Discovery adapter.
+
+Customer Supported: LTC, SpTel
+
+#########################################################
+
+SRI - UIV Adapter Migration
+
+SRI - UIV Adapter Migration Framework is a framework that was built on top of UIV. This framework helps in:
+1. Fetching the data from the external server using SQL.
+2. Fetching necessary data from the internal server using CQL that are loaded into UIV using Discovery Adapter.
+3. From the necessary data fetched using SQL and CQL, the XSLT file is written to transform the data as per UIV design to import it into UIV Neo4j.
+4. Properties file will have a series of sequence steps to be executed for CQL, SQL, XSLT.
+
+Developed the SQL, CQL, XSLT, and properties file for 10+ adapters.
+
+Customer: NBN
+
+#########################################################
+
+GSD PowerBI reports
+
+Using Jira-utility, fetched all the required Jira of our whole CNS teams, non-epics in one file and epics in one file via unique Jira filters.
+
+Used these CSV files to create required multiple input files for multiple PowerBI reports.
+
+In each PowerBI, created graphical view (used pie charts, graphs, and based on filters applied view will change), detailed view (table view with filters on the side).
+
+Customer: Nokia internal project
+
+#########################################################
+
+GSD web portal
+
+GSD Web Portal is a tool to create the necessary work item for each project that the customer has requested and finalized.
+This GSD Web Portal also helps maintain created work items. Work items in the sense of JIRA Epic and US.
+
+Enhanced the GSD Portal by including features like drop-down for the field - WI Category; Maintenance Window Pop-Up; Date Slider Adjustments; JIRA Rate Limiting.
+
+Tools used: Node.js, Java
+
+#########################################################
+
+NetAct
+
+NetAct was installed for two customers.
+
+Performed the SAT Testing for those two NetAct installations.
+
+Customer: du.ae, Proximus Tango
+
+#########################################################
+
+NetAct Integration
+
+Based on the documentation provided, integrated the two switches to NetAct.
+
+EroNet Integration 7210 & 7250 switches to NetAct.
+
+Customer: EroNet
+
+#########################################################
+Storage Migration Automation
+
+Developed an application by automating manual steps in migrating VMware ESXi where the VMs in VNX are migrated to Unity without failure and less downtime. It can be achieved by using automated Command Line Interface of uemcli, navicli, and vsecli in the backend to create necessary pre-steps and perform VM migration. The application development is using DevOps tools for achieving betterment.
+
+Technologies Used:
+GIT, Docker, Jenkins, Ansible
+
+Software: NetAct, Python 2.7, Shell script, VseCLI, UEMCLI, VBA
+
+On: OS RHEL 7.4
+
+Development Done:
+
+CIQ For Nokia Storage Migration: using Excel created an input sheet that has columns that are necessary for migration. Used VBA in Excel to analyze whether the required details are filled and basic validation is done.
+
+Developed the CLI visual representation using Ansible playbook, which lists the steps to be executed and the corresponding Python scripts will be called for execution.
+
+#########################################################
+
+E911 Nuisance Call Blocking Web Portal
+
+The E911 Nuisance Call Blocking Web Portal is an application to block any such identified nuisance callers of E911 emergency service. A ticket is raised against the identified nuisance caller on a third-party application by law enforcement/Public Safety Answering Point (PSAP) agents. An E911 Web Portal end-user can then use details from the ticket to register the nuisance caller on the E911 Web Portal and perform block/unblock operations.
+
+Automating the test cases of the application will help in continuous testing and acceptance testing with less cost and save time. The automation of testing is performed through Robot Framework.
+
+Major libraries used in Robot Framework:
+
+SeleniumLibrary
+String
+BuiltIn
+Collections
+Database Library
+SSH Library
+
+Customer: Verizon
+
+#########################################################
+
+Asset Manager
+
+Developed using MIT Android App as a mobile application.
+
+Asset Manager – Android application to maintain data about the assets purchased and the state of the asset i.e., whether the asset is allotted or requested for service or under repair or expired, etc.
+
+#########################################################
+
+Other details I want to provide on NBN project/NetAct, Integration, E911.
+
+NAC and UIV NOkia product is installed on ncs/ocp env 
+in this i work on UIV product only.
+NAC uses data created in UIV.
+
+UIV component has CSFP, harbor, Neo4j Browser, Ihub gui, minio.... i use all these tools 
+
+it has multiple instance of rda pods, neo4j pods, mariadb pods, minio pod, kafka pods to support the UIV component
+
+###################################################################
+
+UIV framework: development wise
+Adapter type Discovery 
+the UIV framework help us to collect the data files like .json, .xml, .csv file using sftp and http (only once i worked).
+when we update the xml file called filterfile or transform file. Product framework will use those file transform the into expected format and save it has /xml file.
+
+while creating entities we update the filter file so that necessary assocation between the entities are created.
+at some case filterfile alone will not be sufficient to create necessay data. so in java code i will write customized code to update data as expected using xml and json paths (will use java packages)
+
+in these adapters data's streamed will be mostly between 3L to 25L.
+
+Developed and took handover for more than 15+ adapters
+
+
+Cusotmer: AT&T, Optus,
+
+###################################################################
+
+there is another type of adapter which uses .go language and .js .java .xml .config
+in this adapter we have customized the adapter that does following activity. 
+dynamic logic developed to fetch data from external oracle db as csv format and import those csv files to local mariadb.
+inclusion/exclusion of tables or columns are maintained in the .conf that will generate the query to fetch data from external server and import it into internal server.
+
+in this developed a transformation code that will use csv file input as input, js file to transform into required UIV Data. Sql queries are used to fetch all the required and related data from multiple tables that were used in js file.
+
+The generated data will be streamed using kafka producer. they are cosumed by the product's kafka consumer and load into neo4j.
+
+
+logics are implemented to generate the delta between today's data yesterday's data.
+
+in new enities are included, insert data will be streamed.
+if existing data got updated, update data will be streamed
+if data got delete in delta, delete data will be streamed.
+
+these code are created to generate UIV data of about 5Crore data.
+
+in order to do all these activities created a docker image that includes all necessary packages, languages and its dependencies to perform above steps.
+
+it is a singe unique requirement
+
+Customer: Optus
+
+###################################################################
+
+
+
+Adapter type Stitching
+
+in the product framework will ask to write xml file that will fetch different set of entities and create associaton between as required.
+
+But this will not support in all case.
+
+so we have written the adapter that will fetch data from neo4j process it. if required it will fetch multiple other related entities and create necessary associations between them and include necessary properties to it.
+
+Developed and took handover for more than 10+ adapters
+
+
+Customer: Optus
+
+
+###################################################################
+
+
+Deployement
+
+The developed adapter i used to check in to git 
+using jenkins pipeline i will create necessary jar files.
+those jar files i will deploy in the UIV Env. using curl commands
+
+the helix docker image which are created as profile will be insatlled in kuberneties.
+
+once these adapter are deployed when i execute the adapter, execution details all will be stored in mariadb and created data will be loaded into neo4j.
+
+
+using framework data will be streamed. multiple rda pods handles these streaming.
+1 rda pod monitors the entities and loads into neo4j
+2 rda pod validates newly streamed and existing data and keeps the streamed data alone
+
+
+IHUB is a tool to visually view the UIV data's and trigger the adapter.
+this ihub can be customized to make it visual as customers wants. i have theratical knowledge on this and didnt work.
+
+###################################################################
+
+Environment support
+many times these environment goes down i will restart required pod in sequence to fix it.
+existing pod replica counts sometimes does nt provide required performance. so will monitor  them increase them as required.
+
+clearing the streamed data lags in kafak pods when they 
+
+
+
+#########################################################
+
+Document Preparation
+
+prepared required deployment/release document.
+implementation document for each adapter.
+
+#########################################################
+
+Testing support
+
+all the Unit testing will be done and delivered.
+
+But still testing team doesnt work efficienty. so necessary support will be provided from side for execution and testing.
+
+
+#########################################################
+Languages i worked 
+java
+python
+js
+
+ddl
+neo4j
+mariadb
+
+other tools (basic)
+github
+jenkins
+docker
+
+###################################################################
+
+Development Support,
+
+For the development i have supported my collegues in the development of Discovery adapter
+
+Customer Supported: LTC, SpTel
+
+
+#########################################################
+
+
+SRI - UIV Adapter Migration
+
+
+SRI - UIV Adapter Migration Framework is an framework which was built on top of UIV. This framewok helps in 
+1.fetching the Data from External server using SQL 
+2.Fetching necessary data from Internal server using CQL that are loaded into UIV using Discovery Adapter.
+3.From the necessary data fetched using SQL and CQL, The XSLT file are written to transform the data as per UIV design to import it into UIV Neo4j.
+4.properties file will have series of sequence steps to be executed for CQL,SQL,XSLT
+
+Developed the SQL,CQL,XSLT and properties file 10+ adapters.
+
+Customer:NBN
+
+#########################################################
+
+ GSD PowerBI reports. 
+
+using jira-utility fetched all the required jira of our whole CNS teams, non-epics in one file and epics in one file via unique jira filters.
+
+Used these csv files to create required mubltiple input file for multiple PowerBI reports.
+
+in each powerbi created graphical view (used piecharts, graphs, and based on filters applied view will change) , detailed view (table view with filters on side)
+
+Customer: Nokia internal Project
+
+#########################################################
+
+
+GSD web portal
+
+GSD Web Portal is tool to create the necessary workItem for each project that customer is requested and finalized. 
+This GSD Web Portal also helps maintain created workItems. Work Items in the sense and JIRA Epic and US.
+
+Enhanced the GSD Portal by including features like drop down for the field - WI Category; Maintenance Window Pop Up; Date Slider Adjustments; JIRA Rate Limiting.
+
+tools used: node.js, java
+
+#########################################################
+
+
+NetAct.
+
+NetAct was installed for two customer.
+
+Performed the SAT Testing for those two netact installation
+
+Customer: du.ae, Proximus Tango
+
+
+#########################################################
+
+NetAct Integration
+
+Based on the documentation provided integrated the two switches to NetAct.
+
+	EroNet Integration 7210&7250 switches to Netact.
+	
+
+Customer: EroNet
+
+#########################################################
+Storage Migration Automation
+
+Developed application by automating manual steps in Migrating VMware ESXi where the VMs in VNX is migrated to Unity without failure and less down time.  It can be achieved by using automated Command Line Interface of uemcli, navicli and vsecli in backend to create necessary pre steps and perform VM migration.  The application Development is using DevOps Tools for achieving betterment.
+
+
+Technologies Used:
+GIT, Docker, Jenkins, Ansible
+
+Software: NetAct, Python2.7, Shell scrip, VseCLI, UEMCLI, VBA
+
+On: OS RHEL 7.4
+
+Development Done:
+
+CIQ For Nokia Storage Migration: using excel created a input sheet that has columns that are necessary for Migration. Used VBA in excel to analyse whether the required details are filled and basic validation is done.
+
+Developed the CLI visual representation using Ansible playbook, which list of steps to be executed and the corresponding python scripts will be called for execution.
+
+
+#########################################################
+
+E911 NUISANCE CALL BLOCKING WEB PORTAL
+
+
+  The E911 Nuisance Call Blocking Web Portal is an application to block any such identified nuisance callers of E911 emergency service. A ticket is raised against the identified nuisance caller on a third-party application by law enforcement/Public Safety Answering Point (PSAP) agents. An E911 Web Portal end-user can then use details from the ticket to register the nuisance caller on the E911 Web Portal and perform block/unblock operations.
+ 
+Automating the testcases of application will help in continuous testing and Acceptance testing with less cost and save time.  The automation of testing is performed through Robot frame work.
+
+
+MAJOR LIBRARIES USED IN ROBOT FRAMEWORK : 
+
+SELENIUMLIBRARY
+STRING
+BUILTIN
+COLLECTIONS
+DATABASE LIBRARY
+SSH LIBRARY
+
+
+Customer: Verizon
+
+
+#########################################################
+
+Asset Manager
+
+Developed using MIT Android App as mobile application
+
+Asset Manager” – Android application to maintain data about the assets purchased and state of the asset i.e., like whether the asset is allotted or requested for service or under repair or expired, etc.
+
+
+
+
+#########################################################
+
+
+
+other details i want provide on NBN project/ NetAct, Integration, E911.
